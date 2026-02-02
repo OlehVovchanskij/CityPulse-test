@@ -1,10 +1,13 @@
-import { Text, View } from 'react-native';
+import Header from '@/components/ui/Header';
+import ThemedView from '@/components/ui/ThemedView';
+import { Text } from 'react-native';
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text>HomeScreen</Text>
-    </View>
+    <ThemedView edges={['left', 'right']}>
+      <Header title="Home" />
+      <Text>Home Screen</Text>
+    </ThemedView>
   );
 };
 
