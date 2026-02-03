@@ -4,7 +4,7 @@ import { EventsStore } from './eventsStore.types';
 
 export const useEventsStore = create<EventsStore>((set, get) => ({
   savedEvents: [],
-
+  activeEvent: null,
   addToSaved: (event) => {
     const current = get().savedEvents;
 
@@ -40,5 +40,8 @@ export const useEventsStore = create<EventsStore>((set, get) => ({
   },
   isSaved: (eventId) => {
     return get().savedEvents.some((e) => e.id === eventId);
+  },
+  setActiveEvent: (event) => {
+    set({ activeEvent: event });
   },
 }));
