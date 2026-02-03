@@ -8,7 +8,7 @@ import { queryKeys } from './keys';
 export interface FormattedEvent extends Event {
   date: Date;
   formattedDate: string;
-  location?: {
+  location: {
     lat: number;
     lng: number;
   };
