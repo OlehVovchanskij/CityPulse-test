@@ -4,7 +4,7 @@ import { useFilterEvents } from '@/hooks/useFilterEvents';
 import { useEventsStore } from '@/store/eventsStore/eventsStore';
 import { Bot } from 'lucide-react-native';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import EventCard from '../EventCard/EventCard';
+import MemoizedEventCard from '../EventCard/EventCard';
 
 const EventsList = ({ search, filter }: { search: string; filter: 'all' | 'saved' }) => {
   const { data: events, isLoading, isError, refetch, isRefetching } = useEventsList();
@@ -34,7 +34,7 @@ const EventsList = ({ search, filter }: { search: string; filter: 'all' | 'saved
         keyExtractor={(item) => item.id.toString()}
         numColumns={1}
         ItemSeparatorComponent={() => <View className="h-4" />}
-        renderItem={({ item }) => <EventCard event={item} />}
+        renderItem={({ item }) => <MemoizedEventCard event={item} />}
         onRefresh={refetch}
         refreshing={isRefetching}
       />

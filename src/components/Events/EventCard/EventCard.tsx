@@ -2,6 +2,7 @@ import { FormattedEvent } from '@/api/events/tanstack/events.query';
 import { Typography } from '@/components/ui/Typography';
 import { useEventsStore } from '@/store/eventsStore/eventsStore';
 import { Star } from 'lucide-react-native';
+import { memo } from 'react';
 import { Pressable, TouchableOpacity, View } from 'react-native';
 
 const EventCard = ({ event }: { event: FormattedEvent }) => {
@@ -42,5 +43,5 @@ const EventCard = ({ event }: { event: FormattedEvent }) => {
     </View>
   );
 };
-
-export default EventCard;
+const MemoizedEventCard = memo(EventCard);
+export default MemoizedEventCard;
