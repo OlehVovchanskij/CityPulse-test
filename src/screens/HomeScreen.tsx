@@ -12,6 +12,7 @@ const HomeScreen = () => {
 
   const [filter, setFilter] = useState<'all' | 'saved'>('all');
   const [search, setSearch] = useState('');
+
   return (
     <ThemedView edges={['left', 'right']}>
       <Header title="Events">

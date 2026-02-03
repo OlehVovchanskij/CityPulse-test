@@ -1,3 +1,4 @@
+import OfflineBadge from '@/components/ui/OfflineBadge';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Tabs from './tabs';
@@ -12,8 +13,11 @@ const RootStack = () => {
 };
 export const Navigation = () => {
   return (
-    <NavigationContainer>
-      <RootStack />
-    </NavigationContainer>
+    <>
+      <OfflineBadge />
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
+    </>
   );
 };

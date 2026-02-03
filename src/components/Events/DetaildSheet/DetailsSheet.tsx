@@ -1,51 +1,46 @@
-import { Typography } from '@/components/ui/Typography';
+import { useCommentsList } from '@/api/events/tanstack/events.query';
 import { useEventsStore } from '@/store/eventsStore/eventsStore';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-import { RefObject, useEffect, useMemo, useRef } from 'react';
-import { Text, TouchableOpacity } from 'react-native';
-interface DetailsSheetProps {
-  ref: RefObject<BottomSheet | null>;
-}
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useEffect, useMemo, useRef } from 'react';
+import { ActivityIndicator, Text } from 'react-native';
+import CommentsList from './CommentsList';
+import EventHeader from './EventHeader';
+import SaveEventButton from './SaveEventButton';
+
 const DetailsSheet = () => {
-  const { activeEvent, setActiveEvent, toggleSave, isSaved } = useEventsStore();
+  const { activeEvent, setActiveEvent } = useEventsStore();
+
+  const { data: comments, isLoading, isError } = useCommentsList(activeEvent ? activeEvent.id : 0);
+
   const ref = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['30%'], []);
+  const snapPoints = useMemo(() => ['30%', '60%'], []);
+
   useEffect(() => {
-    if (activeEvent) {
-      ref.current?.snapToIndex(1);
-    } else {
-      ref.current?.close();
-    }
+    activeEvent ? ref.current?.snapToIndex(1) : ref.current?.close();
   }, [activeEvent]);
+
   return (
     <BottomSheet
       ref={ref}
       index={-1}
       snapPoints={snapPoints}
-      onClose={() => setActiveEvent(null)}
-      enablePanDownToClose>
-      <BottomSheetView style={{ padding: 16, minHeight: 200 }}>
-        {activeEvent ? (
+      enablePanDownToClose
+      onClose={() => setActiveEvent(null)}>
+      <BottomSheetScrollView contentContainerStyle={{ padding: 16 }}>
+        {!activeEvent && <Text>No event selected</Text>}
+
+        {activeEvent && (
           <>
-            <Typography variant="h2" className="mb-2">
-              {activeEvent.title}
-            </Typography>
-            <Typography variant="body" className="mb-4">
-              {activeEvent.formattedDate}
-            </Typography>
-            <Typography variant="body">{activeEvent.body}</Typography>
-            <TouchableOpacity
-              className="mt-6 rounded-3xl bg-blue-500 px-4 py-2"
-              onPress={() => toggleSave(activeEvent)}>
-              <Typography variant="h3" className="text-center text-white">
-                {isSaved(activeEvent.id) ? 'Unsave Event' : 'Save Event'}
-              </Typography>
-            </TouchableOpacity>
+            <EventHeader event={activeEvent} />
+            <SaveEventButton event={activeEvent} />
+
+            {isLoading && <ActivityIndicator size="small" />}
+            {isError && <Text style={{ color: 'red' }}>Failed to load comments</Text>}
+
+            {!isLoading && !isError && <CommentsList comments={comments ?? []} />}
           </>
-        ) : (
-          <Text style={{ color: 'white' }}>No event selected</Text>
         )}
-      </BottomSheetView>
+      </BottomSheetScrollView>
     </BottomSheet>
   );
 };
