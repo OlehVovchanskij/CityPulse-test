@@ -8,9 +8,11 @@ export const queryClientConfig: QueryClientConfig = {
       retry: 1,
       refetchOnReconnect: true,
       refetchOnWindowFocus: false,
+      networkMode: 'online',
     },
     mutations: {
       retry: 1,
+      networkMode: 'online',
     },
   },
 };

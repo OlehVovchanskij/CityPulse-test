@@ -1,5 +1,6 @@
 import HomeScreen from '@/screens/HomeScreen';
-import { Home, LucideIcon, Map, Star } from 'lucide-react-native';
+import MapScreen from '@/screens/MapScreen';
+import { Home, LucideIcon, Map } from 'lucide-react-native';
 
 export interface Tab {
   name: string;
@@ -16,14 +17,8 @@ export const tabsData: Tab[] = [
   },
   {
     name: 'EventsMap',
-    component: HomeScreen,
+    component: MapScreen,
     icon: Map,
     label: 'Map',
-  },
-  {
-    name: 'Saved',
-    component: HomeScreen,
-    icon: Star,
-    label: 'Saved',
   },
 ];

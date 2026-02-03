@@ -3,12 +3,12 @@ import { generateDateFromId } from '@/utils/DateFromId';
 import { formatDate } from '@/utils/formateDate';
 import { generateLvivLocationFromId } from '@/utils/generateLocation';
 import { useQuery } from '@tanstack/react-query';
-import { getAllEvents } from '../events.api';
+import { getAllEvents, getCommentsByEvent } from '../events.api';
 import { queryKeys } from './keys';
 export interface FormattedEvent extends Event {
   date: Date;
   formattedDate: string;
-  location?: {
+  location: {
     lat: number;
     lng: number;
   };
@@ -25,5 +25,11 @@ export const useEventsList = () => {
         location: generateLvivLocationFromId(event.id),
       }));
     },
+  });
+};
+export const useCommentsList = (eventId: number) => {
+  return useQuery({
+    queryKey: queryKeys.comments.byEvent(eventId.toString()),
+    queryFn: () => getCommentsByEvent(eventId),
   });
 };

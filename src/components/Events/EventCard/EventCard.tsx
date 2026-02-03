@@ -1,10 +1,19 @@
 import { FormattedEvent } from '@/api/events/tanstack/events.query';
 import { Typography } from '@/components/ui/Typography';
-import { TouchableOpacity, View } from 'react-native';
+import { useEventsStore } from '@/store/eventsStore/eventsStore';
+import { Star } from 'lucide-react-native';
+import { memo } from 'react';
+import { Pressable, TouchableOpacity, View } from 'react-native';
 
 const EventCard = ({ event }: { event: FormattedEvent }) => {
+  const { toggleSave, isSaved, setActiveEvent } = useEventsStore();
+
+  const handleShowDetails = () => {
+    setActiveEvent(event);
+  };
+
   return (
-    <View className="border-border bg-card w-full flex-row  items-center justify-between gap-2 rounded-md border-[1px] px-4 py-3">
+    <View className="w-full flex-row items-center justify-between  gap-2 rounded-md border-[1px] border-border bg-card px-4 py-3">
       <View className="min-w-0 flex-1">
         <Typography variant="h3" className="">
           {event.title}
@@ -13,15 +22,26 @@ const EventCard = ({ event }: { event: FormattedEvent }) => {
           {event.formattedDate}
         </Typography>
       </View>
-      <View>
-        <TouchableOpacity className="self-start rounded-md bg-blue-500 px-2 py-1 ">
+      <View className="items-center justify-between gap-2">
+        <TouchableOpacity
+          onPress={handleShowDetails}
+          className="self-start rounded-md bg-blue-500 px-2 py-1 ">
           <Typography variant="body" className="font-semibold text-white ">
             Details
           </Typography>
         </TouchableOpacity>
+        <Pressable
+          className="rounded-md bg-slate-100 px-2 py-1 active:bg-slate-200"
+          onPress={() => toggleSave(event)}>
+          <Star
+            size={24}
+            color={isSaved(event.id) ? '#F59E0B' : '#64748B'}
+            fill={isSaved(event.id) ? '#FACC15' : 'transparent'}
+          />
+        </Pressable>
       </View>
     </View>
   );
 };
-
-export default EventCard;
+const MemoizedEventCard = memo(EventCard);
+export default MemoizedEventCard;
