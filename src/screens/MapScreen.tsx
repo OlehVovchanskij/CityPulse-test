@@ -1,9 +1,23 @@
-import { useEventsList } from '@/api/events/tanstack/events.query';
+import { FormattedEvent, useEventsList } from '@/api/events/tanstack/events.query';
+import DetailsSheet from '@/components/Events/DetaildSheet/DetailsSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { useEffect, useRef, useState } from 'react';
 import { View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-
 const MapScreen = () => {
   const { data: events, isLoading, isError } = useEventsList();
+
+  const [selectedEvent, setSelectedEvent] = useState<FormattedEvent | null>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  useEffect(() => {
+    if (selectedEvent) {
+      bottomSheetRef.current?.snapToIndex(1);
+    }
+  }, [selectedEvent]);
+  const onMarkerPress = (event: FormattedEvent) => {
+    setSelectedEvent(event);
+  };
   if (isLoading || isError) {
     return <View />;
   }
@@ -20,16 +34,22 @@ const MapScreen = () => {
         {events &&
           events.map((event) => (
             <Marker
-              title={event.title}
-              description={event.body}
+              subtitleVisibility="visible"
               key={event.id}
               coordinate={{
                 latitude: event.location.lat,
                 longitude: event.location.lng,
               }}
+              onPress={() => onMarkerPress(event)}
             />
           ))}
       </MapView>
+
+      <DetailsSheet
+        bottomSheetRef={bottomSheetRef}
+        selectedEvent={selectedEvent}
+        setSelectedEvent={setSelectedEvent}
+      />
     </View>
   );
 };
